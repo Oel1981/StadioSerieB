@@ -752,20 +752,28 @@ async function confirmPin() {
     document.getElementById('pin-input').focus();
     return;
   }
+
+  // Salva l'azione corrente PRIMA di chiudere il modal (che resetta pAction)
+  const azione = pAction;
+  const idDaEliminare = pId;
   closePinModal();
-  if (pAction === 'pdf') {
+
+  // PDF
+  if (azione === 'pdf') {
     eseguiStampaPDF();
     return;
   }
+
+  // CANCELLAZIONE
   const overlay = document.getElementById('loading-overlay');
   document.getElementById('loading-text').textContent = 'Cancellazione in corso…';
   overlay.classList.remove('hidden');
   try {
-    if (pAction === 'single') {
-      await dbDelete(pId);
-      votiCache = votiCache.filter(v => v.id !== pId);
+    if (azione === 'single') {
+      await dbDelete(idDaEliminare);
+      votiCache = votiCache.filter(v => v.id !== idDaEliminare);
       showToast('Voto eliminato.');
-    } else {
+    } else if (azione === 'all') {
       await dbDeleteAll();
       votiCache = [];
       showToast('Tutti i voti eliminati.');
