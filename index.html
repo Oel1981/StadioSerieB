@@ -120,7 +120,56 @@
   .empty-state{text-align:center;padding:4rem 2rem;color:var(--text-dim)}
   .empty-state h3{font-weight:700;font-size:1.1rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;color:var(--text-muted)}
 
+  .btn-pdf{background:transparent;color:var(--accent2);border:1px solid var(--accent2);border-radius:var(--radius);font-family:'Josefin Sans',sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:.4rem 1rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .btn-pdf:hover{background:var(--accent2);color:#000}
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { background: #fff !important; color: #000 !important; font-family: 'Josefin Sans', sans-serif; }
+    body::before { display: none !important; }
+    header, nav.tabs, .loading-overlay, .toast, #pin-modal,
+    .results-toolbar, .form-actions, .btn-danger, .btn-pdf,
+    #tab-form, .panel:not(.print-target) { display: none !important; }
+    .panel.print-target { display: block !important; }
+    main { max-width: 100% !important; padding: 0 !important; }
+
+    .print-header { display: block !important; }
+
+    /* RANKING PRINT */
+    .stats-grid { display: grid !important; grid-template-columns: repeat(4,1fr) !important; gap: .5rem !important; margin-bottom: 1rem !important; }
+    .stat-card { background: #f5f5f5 !important; border: 1px solid #ccc !important; padding: .75rem !important; text-align: center !important; border-radius: 4px; }
+    .stat-value { color: #c8a800 !important; font-size: 1.6rem !important; }
+    .stat-label { color: #666 !important; font-size: .6rem !important; }
+    .rank-table { width: 100% !important; border-collapse: collapse !important; font-size: .8rem !important; }
+    .rank-table th { background: #1a1a2e !important; color: #e8c84a !important; padding: .5rem .75rem !important; font-size: .65rem !important; letter-spacing: .1em !important; }
+    .rank-table td { padding: .5rem .75rem !important; border-bottom: 1px solid #ddd !important; }
+    .rank-table tr:nth-child(even) td { background: #f9f9f9 !important; }
+    .rank-pos { font-size: 1rem !important; font-weight: 700 !important; }
+    .rank-pos.gold { color: #c8a800 !important; }
+    .rank-pos.silver { color: #888 !important; }
+    .rank-pos.bronze { color: #cd7f32 !important; }
+    .stadium-name { color: #000 !important; font-weight: 700 !important; }
+    .team-name { color: #555 !important; }
+    .score-bar { display: flex !important; align-items: center !important; gap: .35rem !important; }
+    .bar-track { display: none !important; }
+    .score-num { color: #c8a800 !important; font-size: .82rem !important; min-width: auto !important; }
+    .vote-count { color: #555 !important; }
+
+    /* DETTAGLIO PRINT */
+    .detail-row { background: #fff !important; border: 1px solid #ddd !important; border-radius: 4px !important; padding: .75rem !important; margin-bottom: .5rem !important; page-break-inside: avoid !important; }
+    .detail-meta { color: #444 !important; font-size: .78rem !important; }
+    .detail-meta strong { color: #000 !important; }
+    .regista-badge { background: #eef !important; border: 1px solid #99c !important; color: #336 !important; }
+    .giornata-badge { background: #c8a800 !important; color: #000 !important; }
+    .cs-item { background: #f5f5f5 !important; border: 1px solid #ccc !important; }
+    .cs-label { color: #666 !important; }
+    .cs-val { color: #c8a800 !important; }
+    .note-text { color: #555 !important; border-left: 2px solid #ccc !important; }
+    .card { background: #fff !important; border: 1px solid #ddd !important; padding: 1rem !important; }
+  }
+
   .sep{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+  .print-header{display:none}
 
   @media(max-width:700px){
     header{padding:0 1rem}
@@ -160,7 +209,7 @@
       <div class="form-grid four">
         <div class="field">
           <label>Tuo Nome / Regista</label>
-          <input type="text" id="regista" placeholder="es. Leo Rossi (opzionale)" autocomplete="name">
+          <input type="text" id="regista" placeholder="Nome / Regista (opzionale)" autocomplete="name">
         </div>
         <div class="field">
           <label>Giornata di Campionato</label>
@@ -197,7 +246,7 @@
       <div class="form-grid three">
         <div class="field">
           <label>Squadra Casa (Stadio Valutato)</label>
-          <input type="text" id="squadraCasa" placeholder="es. Empoli" oninput="aggiornaStadio()" list="squadre-list" autocomplete="off">
+          <input type="text" id="squadraCasa" placeholder="Squadra di casa" oninput="aggiornaStadio()" list="squadre-list" autocomplete="off">
           <datalist id="squadre-list">
             <option value="Avellino"><option value="Bari"><option value="Brescia">
             <option value="Carrarese"><option value="Catanzaro"><option value="Cesena">
@@ -215,22 +264,22 @@
         </div>
         <div class="field">
           <label>Squadra Ospite</label>
-          <input type="text" id="squadraOspite" placeholder="es. Mantova">
+          <input type="text" id="squadraOspite" placeholder="Squadra ospite">
         </div>
       </div>
       <hr class="sep">
       <div class="form-grid" style="grid-template-columns:1fr 1fr">
         <div class="field">
           <label>Stadio Valutato (Squadra Casa)</label>
-          <input type="text" id="stadio" placeholder="es. Stadio Carlo Castellani">
+          <input type="text" id="stadio" placeholder="Nome stadio">
         </div>
         <div class="field">
           <label>Città</label>
-          <input type="text" id="citta" placeholder="es. Empoli">
+          <input type="text" id="citta" placeholder="Città">
         </div>
       </div>
       <p style="font-size:.75rem;color:var(--text-muted);margin-top:.75rem">
-        ℹ Il campo valutato è lo <strong>stadio della squadra di casa</strong>. Empoli vs Mantova → si vota il Carlo Castellani (Empoli).
+        ℹ Il campo valutato è lo <strong>stadio della squadra di casa</strong>.
       </p>
     </div>
 
@@ -283,11 +332,19 @@
 
   <!-- RANKING -->
   <div class="panel" id="tab-ranking">
+    <div class="print-header" id="print-header-ranking">
+      <div style="text-align:center;padding:1.5rem 0 1rem;border-bottom:3px solid #c8a800;margin-bottom:1rem">
+        <div style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#888;margin-bottom:.25rem">Lega Serie B 2025-2026</div>
+        <div style="font-size:1.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#000">Miglior Stadio — Classifica</div>
+        <div style="font-size:.75rem;color:#666;margin-top:.35rem" id="print-date-ranking"></div>
+      </div>
+    </div>
     <div class="results-toolbar">
       <div class="field" style="margin:0"><select id="filter-giornata" onchange="renderRanking()"><option value="">Tutte le giornate</option></select></div>
       <div class="field" style="margin:0"><input type="text" id="filter-search" placeholder="Cerca stadio / squadra..." oninput="renderRanking()" style="min-width:200px"></div>
       <div class="spacer"></div>
       <span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--text-muted)" id="tot-voti-label">— voti totali</span>
+      <button class="btn-pdf" onclick="stampaPDF('ranking')">⬇ Esporta PDF Classifica</button>
     </div>
     <div class="stats-grid" id="stats-grid"></div>
     <div class="card" style="padding:0;overflow:hidden">
@@ -312,10 +369,18 @@
 
   <!-- DETTAGLIO -->
   <div class="panel" id="tab-dettaglio">
+    <div class="print-header" id="print-header-dettaglio">
+      <div style="text-align:center;padding:1.5rem 0 1rem;border-bottom:3px solid #c8a800;margin-bottom:1rem">
+        <div style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#888;margin-bottom:.25rem">Lega Serie B 2025-2026</div>
+        <div style="font-size:1.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#000">Miglior Stadio — Dettaglio Voti</div>
+        <div style="font-size:.75rem;color:#666;margin-top:.35rem" id="print-date-dettaglio"></div>
+      </div>
+    </div>
     <div class="results-toolbar">
       <div class="field" style="margin:0"><select id="det-filter-giornata" onchange="renderDettaglio()"><option value="">Tutte le giornate</option></select></div>
       <div class="field" style="margin:0"><input type="text" id="det-search" placeholder="Cerca regista / stadio..." oninput="renderDettaglio()" style="min-width:200px"></div>
       <div class="spacer"></div>
+      <button class="btn-pdf" onclick="stampaPDF('dettaglio')" style="white-space:nowrap">⬇ Esporta PDF Voti</button>
       <button class="btn-danger" onclick="confirmClearAll()" style="white-space:nowrap">🗑 Cancella Tutto</button>
     </div>
     <div id="dettaglio-list"></div>
@@ -571,7 +636,7 @@ function aggregateByStadio(voti, giornata, search) {
 // ════════════════════════════════════════════════════════════
 // SORT
 // ════════════════════════════════════════════════════════════
-let sField = 'media', sDir = -1;
+let sField = 'media', sDir = -1; // -1 = decrescente (media più alta prima)
 function sortBy(f) { if (sField === f) sDir *= -1; else { sField = f; sDir = -1; } renderRanking(); }
 
 // ════════════════════════════════════════════════════════════
@@ -632,7 +697,7 @@ function renderDettaglio() {
     const ds = v.data ? new Date(v.data+'T12:00:00').toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'}) : '—';
     return `<div class="detail-row">
       <div class="detail-meta">
-        <span class="regista-badge">🎬 ${v.regista||'Anonimo'}</span>
+        <span class="regista-badge">${v.regista||'Anonimo'}</span>
         ${v.giornata?`<span class="giornata-badge">${v.giornata}</span>`:''}
         <span><strong>${v.squadraCasa}</strong> vs ${v.squadraOspite}</span>
         <span>${ds}${v.ora?' · '+v.ora:''}</span>
@@ -688,6 +753,10 @@ async function confirmPin() {
     return;
   }
   closePinModal();
+  if (pAction === 'pdf') {
+    eseguiStampaPDF();
+    return;
+  }
   const overlay = document.getElementById('loading-overlay');
   document.getElementById('loading-text').textContent = 'Cancellazione in corso…';
   overlay.classList.remove('hidden');
@@ -708,6 +777,40 @@ async function confirmPin() {
     overlay.classList.add('hidden');
     document.getElementById('loading-text').textContent = 'Caricamento dati...';
   }
+}
+
+// ════════════════════════════════════════════════════════════
+// EXPORT PDF — protetto da PIN
+// ════════════════════════════════════════════════════════════
+let pdfTipo = null;
+
+function stampaPDF(tipo) {
+  pdfTipo = tipo;
+  pAction = 'pdf';
+  openPin('Inserisci il PIN per esportare il PDF.');
+}
+
+function eseguiStampaPDF() {
+  const tipo = pdfTipo;
+  const oggi = new Date().toLocaleDateString('it-IT', { day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  const giornataAttiva = tipo === 'ranking'
+    ? document.getElementById('filter-giornata').value
+    : document.getElementById('det-filter-giornata').value;
+  const giornataLabel = giornataAttiva ? ' · ' + giornataAttiva : ' · Tutte le giornate';
+
+  if (tipo === 'ranking') {
+    document.getElementById('print-date-ranking').textContent = 'Stampato il ' + oggi + giornataLabel;
+  } else {
+    document.getElementById('print-date-dettaglio').textContent = 'Stampato il ' + oggi + giornataLabel;
+  }
+
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('print-target'));
+  document.getElementById('tab-' + tipo).classList.add('print-target');
+  window.print();
+  setTimeout(() => {
+    document.getElementById('tab-' + tipo).classList.remove('print-target');
+    pdfTipo = null;
+  }, 1000);
 }
 
 // ════════════════════════════════════════════════════════════
